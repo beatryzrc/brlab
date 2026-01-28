@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BR.lab | Web Engineering & Data</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <style>
+        :root {
+            --bg-dark: #050608;
+            --card-bg: rgba(13, 16, 23, 0.6);
+            /* O Gradiente Mestre */
+            --main-gradient: linear-gradient(90deg, #0072ff 0%, #00f2ff 100%);
+            --accent-cyan: #00f2ff; /* Backup para brilhos */
+            
+            --text-main: #f0f6fc;
+            --text-dim: #8b949e;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --grid-color: rgba(0, 114, 255, 0.05);
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        html { 
+            scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            /* Grid mais sutil e azulado */
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Vignette para focar no centro */
+        body::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, transparent 20%, var(--bg-dark) 90%);
+            pointer-events: none; z-index: 1;
+        }
+
+        /* Container global para centralizar melhor o conteúdo largo */
+        .wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        section, header, footer {
+            height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 8%;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1, h2, h3, .logo, .btn-action, .label-tech, .footer-title {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* --- UTILITÁRIOS DE GRADIENTE --- */
+        .grad-text {
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .grad-bg {
+            background: var(--main-gradient);
+        }
+
+        /* --- NAV --- */
+        nav {
+            padding: 1.2rem 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(5, 6, 8, 0.85); backdrop-filter: blur(15px);
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: -1px; }
+        .logo span { background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: lowercase; }
+        
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none; font-size: 0.75rem; 
+            font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            transition: var(--transition); margin-left: 2rem; position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0;
+            background: var(--main-gradient); transition: var(--transition);
+        }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* --- HERO --- */
+        .hero-content { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+        .hero h1 {
+            font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.1; font-weight: 700; text-transform: uppercase;
+            background: linear-gradient(to bottom, #fff, #999);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+        /* Cursor piscante com gradiente */
+        .typing { 
+            background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            border-right: 3px solid var(--accent-cyan); 
+            padding-right: 5px;
+        }
+
+        /* --- GRIDS & CARDS --- */
+        .label-tech { 
+            background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 4px; display: block; margin-bottom: 1rem; 
+        }
+        h2 { font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 3rem; line-height: 1; text-transform: uppercase; }
+
+        .grid-layout { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 2rem; /* Mais espaço entre cards */
+            width: 100%;
+        }
+        
+        .card {
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            padding: 3rem; transition: var(--transition);
+            backdrop-filter: blur(10px); display: flex; flex-direction: column;
+            border-radius: 4px;
+        }
+        .card:hover { 
+            border-color: rgba(0, 242, 255, 0.4); 
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .card i { 
+            font-size: 2rem; margin-bottom: 1.5rem; width: fit-content;
+            background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .card h3 { font-size: 1.4rem; margin-bottom: 1rem; text-transform: uppercase; }
+        .card p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; flex-grow: 1; }
+
+        .price { 
+            font-size: 1.5rem; font-weight: 700; color: #fff; margin-top: 2rem; display: block; 
+            border-top: 1px solid var(--glass-border); padding-top: 1.5rem;
+        }
+        .price span { font-size: 0.9rem; background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-right: 5px; }
+
+        /* --- BRIEFING (Novo Layout) --- */
+        .briefing-wrapper {
+            display: grid; grid-template-columns: 1fr 1.2fr;
+            background: rgba(13, 17, 23, 0.4); 
+            border: 1px solid var(--glass-border); 
+            width: 100%;
+            border-radius: 8px; overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+        .briefing-info { 
+            padding: 4rem; 
+            background: var(--main-gradient); /* Fundo Gradiente */
+            color: #fff; /* Texto branco sobre gradiente */
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .briefing-info h3 { font-size: 2.2rem; line-height: 1; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .briefing-info p { font-size: 1rem; opacity: 0.9; font-weight: 400; }
+
+        .briefing-form { padding: 4rem; display: flex; flex-direction: column; justify-content: center; background: rgba(5, 6, 8, 0.8); }
+
+        input, textarea {
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--glass-border);
+            padding: 15px 0; color: #fff; margin-bottom: 2rem; font-family: 'Inter'; font-size: 1rem;
+            transition: var(--transition);
+        }
+        input:focus, textarea:focus { outline: none; border-bottom: 1px solid var(--accent-cyan); }
+        input::placeholder, textarea::placeholder { color: #555; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* Botão Unificado (Gradiente) */
+        .btn-action {
+            display: inline-block; width: 100%; text-align: center;
+            background: var(--main-gradient);
+            color: #000; padding: 18px 0; border-radius: 8px;
+            text-decoration: none; font-weight: 700; font-size: 0.9rem;
+            text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 114, 255, 0.25);
+            transition: var(--transition);
+        }
+        .btn-action:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 35px rgba(0, 242, 255, 0.4);
+            filter: brightness(1.1);
+        }
+        
+        /* Botão Footer (Largura automática) */
+        .btn-footer { width: auto; padding: 18px 50px; margin-bottom: 3rem; border-radius: 50px; }
+
+        /* --- RODAPÉ --- */
+        .footer-content { text-align: center; max-width: 800px; margin: 0 auto; width: 100%; }
+        .footer-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 1rem; color: #fff; }
+        .footer-subtitle { color: var(--text-dim); font-size: 1.2rem; margin-bottom: 3rem; font-weight: 300; }
+
+        .social-icons { display: flex; justify-content: center; gap: 40px; margin-bottom: 3rem; }
+        .social-icons a { color: var(--text-dim); font-size: 1.8rem; transition: var(--transition); }
+        .social-icons a:hover { color: #fff; transform: translateY(-5px); }
+
+        .copyright { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 2px; margin-top: 2rem; text-transform: uppercase; }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 968px) {
+            section, header, footer { height: auto; min-height: 100vh; padding: 120px 6%; scroll-snap-align: none; }
+            html { scroll-snap-type: none; }
+            .briefing-wrapper { grid-template-columns: 1fr; }
+            .briefing-info { padding: 3rem; }
+            .briefing-form { padding: 3rem; }
+            .nav-links { display: none; } 
+            h2 { text-align: center; }
+            .label-tech { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">BR<span>.lab</span></a>
+        <div class="nav-links">
+            <a href="#ecosistema">Ecosistema</a>
+            <a href="#planos">Planos</a>
+            <a href="#briefing">Briefing</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="wrapper hero-content">
+            <h1 data-aos="fade-right" data-aos-duration="1200">Projetos que 
+<span class="typing" id="type-text"></span></h1>
+            <p data-aos="fade-up" data-aos-delay="400" style="color: var(--text-dim); font-size: 1.1rem; max-width: 550px; margin-top: 1rem;">Desenvolvimento web de alto nível para interfaces que dominam o mercado digital.</p>
+        </div>
+    </header>
+
+     <section id="ecosistema">
+        <div class="wrapper">
+            <span class="label-tech" data-aos="fade-down">// SOLUÇÕES</span>
+            <h2 data-aos="fade-left">Ecosistema_</h2>
+            <div class="grid-layout">
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-terminal"></i>
+                    <h3>Portfólios Elite</h3>
+                    <p>Onde o código encontra a arte. Para profissionais que exigem autoridade visual absoluta.</p>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-microchip"></i>
+                    <h3>High-Scale LPs</h3>
+                    <p>Landing Pages de alta performance com taxas de conversão acima da média do mercado.</p>
+                </div>
+                <div class="card" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fas fa-link"></i>
+                    <h3>Data Links</h3>
+                    <p>Bio-links inteligentes que rastreiam cada clique e transformam tráfego em dados reais.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="planos">
+        <div class="wrapper">
+            <span class="label-tech" data-aos="fade-down">// INVESTMENT</span>
+            <h2 data-aos="fade-left">Planos Estratégicos_</h2>
+            <div class="grid-layout">
+                <div class="card" data-aos="zoom-in-right" data-aos-delay="100">
+                    <h3>Starter Protocol</h3>
+                    <p>O essencial para quem precisa de performance e design exclusivo agora.</p>
+                    <span class="price"><span>R$</span> 350 - 500</span>
+                </div>
+                <div class="card" data-aos="zoom-in-left" data-aos-delay="200">
+                    <h3>Enterprise Scale</h3>
+                    <p>Arquitetura multi-camada com consultoria de UX e fluxos de dados.</p>
+                    <span class="price"><span>R$</span> 600 - 1.2k+</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="briefing">
+        <div class="wrapper">
+            <div class="briefing-wrapper" data-aos="flip-up" data-aos-duration="1000">
+                <div class="briefing-info">
+                    <h3>Briefing Técnico_</h3>
+                    <p>Análise de requisitos para soluções sob demanda. Resposta em 24 horas.</p>
+                </div>
+                <div class="briefing-form">
+                    <form action="https://formspree.io/f/mjgwjvbd" method="POST">
+                        <input type="text" name="name" placeholder="Identidade / Empresa" required>
+                        <input type="email" name="email" placeholder="E-mail de Contato" required>
+                        <textarea name="message" rows="3" placeholder="Descreva os Objetivos..."></textarea>
+                        <button type="submit" class="btn-action">Iniciar Protocolo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content" data-aos="fade-up">
+            <h2 class="footer-title">Vamos codificar o seu sucesso?</h2>
+            <p class="footer-subtitle">Ready to deploy.</p>
+            
+            <a href="https://wa.me/5527996070801" class="btn-action btn-footer">Chamar no Lab</a>
+
+            <div class="social-icons">
+                <a href="https://wa.me/5527996070801"><i class="fab fa-whatsapp"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="mailto:contato@brlab.com"><i class="far fa-envelope"></i></a>
+            </div>
+
+            <p class="copyright">© 2026 BR.lab by Beatryz Rodrigues.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({ 
+            duration: 800, 
+            once: false, 
+            mirror: true,
+            easing: 'ease-out-cubic'
+        });
+        
+        const textElement = document.getElementById('type-text');
+        const phrases = [' escalam.', ' convertem.', ' dominam.', ' impactam.'];
+        let pIdx = 0, cIdx = 0, isDeleting = false;
+
+        function type() {
+            const current = phrases[pIdx];
+            textElement.textContent = isDeleting ? current.substring(0, cIdx--) : current.substring(0, cIdx++);
+            let typeSpeed = isDeleting ? 60 : 120;
+            if (!isDeleting && cIdx > current.length) { isDeleting = true; typeSpeed = 2000; }
+            else if (isDeleting && cIdx < 0) { isDeleting = false; pIdx = (pIdx + 1) % phrases.length; cIdx = 0; typeSpeed = 500; }
+            setTimeout(type, typeSpeed);
+        }
+        document.addEventListener('DOMContentLoaded', type);
+    </script>
+</body>
+</html>14:51 27/01/2026
