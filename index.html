@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BR.lab | Web Engineering & Data</title>
+    <title>BR.lab | Sites & Portfólios</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,10 +13,8 @@
         :root {
             --bg-dark: #050608;
             --card-bg: rgba(13, 16, 23, 0.6);
-            /* O Gradiente Mestre */
             --main-gradient: linear-gradient(90deg, #0072ff 0%, #00f2ff 100%);
-            --accent-cyan: #00f2ff; /* Backup para brilhos */
-            
+            --accent-cyan: #00f2ff;
             --text-main: #f0f6fc;
             --text-dim: #8b949e;
             --glass-border: rgba(255, 255, 255, 0.08);
@@ -24,11 +22,26 @@
             --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        html { 
-            scroll-snap-type: y mandatory; 
-            scroll-behavior: smooth; 
+        /* --- CURSOR --- */
+        #custom-cursor {
+            width: 20px; height: 20px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            box-shadow: 0 0 20px var(--accent-cyan);
+            display: none;
+            transform: translate(-50%, -50%);
+        }
+        @media (min-width: 969px) { 
+            #custom-cursor { display: block; } 
+            body { cursor: none; } 
+            a, button, .card, input, textarea { cursor: none; } 
         }
 
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
@@ -36,26 +49,19 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             overflow-x: hidden;
-            /* Grid mais sutil e azulado */
             background-image: 
                 linear-gradient(var(--grid-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 50px 50px;
         }
 
-        /* Vignette para focar no centro */
         body::after {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 50% 50%, transparent 20%, var(--bg-dark) 90%);
             pointer-events: none; z-index: 1;
         }
 
-        /* Container global para centralizar melhor o conteúdo largo */
-        .wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
+        .wrapper { max-width: 1200px; margin: 0 auto; width: 100%; }
 
         section, header, footer {
             height: 100vh;
@@ -68,21 +74,7 @@
             z-index: 2;
         }
 
-        h1, h2, h3, .logo, .btn-action, .label-tech, .footer-title {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        /* --- UTILITÁRIOS DE GRADIENTE --- */
-        .grad-text {
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .grad-bg {
-            background: var(--main-gradient);
-        }
+        h1, h2, h3, .logo, .btn-action, .label-tech, .footer-title { font-family: 'Space Grotesk', sans-serif; }
 
         /* --- NAV --- */
         nav {
@@ -91,10 +83,9 @@
             background: rgba(5, 6, 8, 0.85); backdrop-filter: blur(15px);
             position: fixed; top: 0; width: 100%; z-index: 1000;
             border-bottom: 1px solid var(--glass-border);
-            transition: var(--transition);
         }
         .logo { font-size: 1.5rem; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: -1px; }
-        .logo span { background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: lowercase; }
+        .logo span { background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         .nav-links a {
             color: var(--text-dim); text-decoration: none; font-size: 0.75rem; 
@@ -109,18 +100,18 @@
         .nav-links a:hover::after { width: 100%; }
 
         /* --- HERO --- */
-        .hero-content { display: flex; flex-direction: column; justify-content: center; height: 100%; }
         .hero h1 {
             font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.1; font-weight: 700; text-transform: uppercase;
-            background: linear-gradient(to bottom, #fff, #999);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
+            color: #fff; margin-bottom: 1.5rem;
         }
-        /* Cursor piscante com gradiente */
+
         .typing { 
+            display: block; 
             background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             border-right: 3px solid var(--accent-cyan); 
-            padding-right: 5px;
+            padding-right: 10px;
+            width: fit-content;
+            min-height: 1.2em; 
         }
 
         /* --- GRIDS & CARDS --- */
@@ -131,27 +122,18 @@
         h2 { font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 3rem; line-height: 1; text-transform: uppercase; }
 
         .grid-layout { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 2rem; /* Mais espaço entre cards */
-            width: 100%;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 2rem; width: 100%;
         }
         
         .card {
             background: var(--card-bg); border: 1px solid var(--glass-border);
             padding: 3rem; transition: var(--transition);
-            backdrop-filter: blur(10px); display: flex; flex-direction: column;
-            border-radius: 4px;
+            backdrop-filter: blur(10px); border-radius: 4px;
+            display: flex; flex-direction: column;
         }
-        .card:hover { 
-            border-color: rgba(0, 242, 255, 0.4); 
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-        .card i { 
-            font-size: 2rem; margin-bottom: 1.5rem; width: fit-content;
-            background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .card:hover { border-color: rgba(0, 242, 255, 0.4); transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .card i { font-size: 2rem; margin-bottom: 1.5rem; background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; width: fit-content; }
         .card h3 { font-size: 1.4rem; margin-bottom: 1rem; text-transform: uppercase; }
         .card p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; flex-grow: 1; }
 
@@ -161,25 +143,17 @@
         }
         .price span { font-size: 0.9rem; background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-right: 5px; }
 
-        /* --- BRIEFING (Novo Layout) --- */
+        /* --- BRIEFING (CSS AJUSTADO PARA PLACEHOLDERS) --- */
         .briefing-wrapper {
             display: grid; grid-template-columns: 1fr 1.2fr;
-            background: rgba(13, 17, 23, 0.4); 
-            border: 1px solid var(--glass-border); 
-            width: 100%;
-            border-radius: 8px; overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            background: rgba(13, 17, 23, 0.4); border: 1px solid var(--glass-border); 
+            border-radius: 8px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
-        .briefing-info { 
-            padding: 4rem; 
-            background: var(--main-gradient); /* Fundo Gradiente */
-            color: #fff; /* Texto branco sobre gradiente */
-            display: flex; flex-direction: column; justify-content: center;
-        }
+        .briefing-info { padding: 4rem; background: var(--main-gradient); color: #fff; display: flex; flex-direction: column; justify-content: center; }
         .briefing-info h3 { font-size: 2.2rem; line-height: 1; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .briefing-info p { font-size: 1rem; opacity: 0.9; font-weight: 400; }
 
-        .briefing-form { padding: 4rem; display: flex; flex-direction: column; justify-content: center; background: rgba(5, 6, 8, 0.8); }
+        .briefing-form { padding: 4rem; background: rgba(5, 6, 8, 0.8); display: flex; flex-direction: column; justify-content: center; }
 
         input, textarea {
             width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--glass-border);
@@ -187,31 +161,30 @@
             transition: var(--transition);
         }
         input:focus, textarea:focus { outline: none; border-bottom: 1px solid var(--accent-cyan); }
-        input::placeholder, textarea::placeholder { color: #555; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
 
-        /* Botão Unificado (Gradiente) */
+        /* ESTILO DA FONTE DOS PLACEHOLDERS IGUAL AO SEU CÓDIGO */
+        input::placeholder, textarea::placeholder { 
+            color: #555; 
+            text-transform: uppercase; 
+            font-size: 0.8rem; 
+            letter-spacing: 1px; 
+        }
+
         .btn-action {
             display: inline-block; width: 100%; text-align: center;
-            background: var(--main-gradient);
-            color: #000; padding: 18px 0; border-radius: 8px;
+            background: var(--main-gradient); color: #000; padding: 18px 0; border-radius: 8px;
             text-decoration: none; font-weight: 700; font-size: 0.9rem;
             text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer;
             box-shadow: 0 10px 25px rgba(0, 114, 255, 0.25);
             transition: var(--transition);
         }
-        .btn-action:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 15px 35px rgba(0, 242, 255, 0.4);
-            filter: brightness(1.1);
-        }
-        
-        /* Botão Footer (Largura automática) */
-        .btn-footer { width: auto; padding: 18px 50px; margin-bottom: 3rem; border-radius: 50px; }
+        .btn-action:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 15px 35px rgba(0, 242, 255, 0.4); }
 
-        /* --- RODAPÉ --- */
+        /* --- FOOTER --- */
         .footer-content { text-align: center; max-width: 800px; margin: 0 auto; width: 100%; }
         .footer-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 1rem; color: #fff; }
         .footer-subtitle { color: var(--text-dim); font-size: 1.2rem; margin-bottom: 3rem; font-weight: 300; }
+        .btn-footer { width: auto; padding: 18px 50px; margin-bottom: 3rem; border-radius: 50px; }
 
         .social-icons { display: flex; justify-content: center; gap: 40px; margin-bottom: 3rem; }
         .social-icons a { color: var(--text-dim); font-size: 1.8rem; transition: var(--transition); }
@@ -219,20 +192,17 @@
 
         .copyright { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 2px; margin-top: 2rem; text-transform: uppercase; }
 
-        /* --- RESPONSIVIDADE --- */
         @media (max-width: 968px) {
             section, header, footer { height: auto; min-height: 100vh; padding: 120px 6%; scroll-snap-align: none; }
-            html { scroll-snap-type: none; }
             .briefing-wrapper { grid-template-columns: 1fr; }
-            .briefing-info { padding: 3rem; }
-            .briefing-form { padding: 3rem; }
             .nav-links { display: none; } 
-            h2 { text-align: center; }
-            .label-tech { text-align: center; }
+            h2, .label-tech { text-align: center; }
         }
     </style>
 </head>
 <body>
+
+    <div id="custom-cursor"></div>
 
     <nav>
         <a href="#" class="logo">BR<span>.lab</span></a>
@@ -245,13 +215,16 @@
 
     <header class="hero">
         <div class="wrapper hero-content">
-            <h1 data-aos="fade-right" data-aos-duration="1200">Projetos que 
-<span class="typing" id="type-text"></span></h1>
-            <p data-aos="fade-up" data-aos-delay="400" style="color: var(--text-dim); font-size: 1.1rem; max-width: 550px; margin-top: 1rem;">Desenvolvimento web de alto nível para interfaces que dominam o mercado digital.</p>
+            <span class="label-tech" data-aos="fade-right" data-aos-delay="200">// PARA QUEM BUSCA O TOPO</span>
+            <h1 data-aos="fade-right" data-aos-duration="1200">
+                Projetos que 
+                <span class="typing" id="type-text"></span>
+            </h1>
+            <p data-aos="fade-up" data-aos-delay="400" style="color: var(--text-dim); font-size: 1.1rem; max-width: 550px;">Desenvolvimento web de alto nível para interfaces que dominam o mercado digital.</p>
         </div>
     </header>
 
-     <section id="ecosistema">
+    <section id="ecosistema">
         <div class="wrapper">
             <span class="label-tech" data-aos="fade-down">// SOLUÇÕES</span>
             <h2 data-aos="fade-left">Ecosistema_</h2>
@@ -317,38 +290,28 @@
         <div class="footer-content" data-aos="fade-up">
             <h2 class="footer-title">Vamos codificar o seu sucesso?</h2>
             <p class="footer-subtitle">Ready to deploy.</p>
-            
             <a href="https://wa.me/5527996070801" class="btn-action btn-footer">Chamar no Lab</a>
-
             <div class="social-icons">
-    <a href="https://wa.me/5527996070801" target="_blank" rel="noopener noreferrer">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-
-    <a href="https://www.instagram.com/soubrlab" target="_blank" rel="noopener noreferrer">
-        <i class="fab fa-instagram"></i>
-    </a>
-
-    <a href="mailto:brlab@outlook.com.br">
-        <i class="far fa-envelope"></i>
-    </a>
-</div>
-
+                <a href="https://wa.me/5527996070801" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/soubrlab" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                <a href="mailto:brlab@outlook.com.br"><i class="far fa-envelope"></i></a>
+            </div>
             <p class="copyright">© 2026 BR.lab by Beatryz Rodrigues.</p>
         </div>
     </footer>
 
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-        AOS.init({ 
-            duration: 800, 
-            once: false, 
-            mirror: true,
-            easing: 'ease-out-cubic'
-        });
+        AOS.init({ duration: 800, once: false, mirror: true });
         
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
         const textElement = document.getElementById('type-text');
-        const phrases = [' escalam.', ' convertem.', ' dominam.', ' impactam.'];
+        const phrases = ['escalam.', 'convertem.', 'dominam.', 'impactam.'];
         let pIdx = 0, cIdx = 0, isDeleting = false;
 
         function type() {
@@ -362,4 +325,4 @@
         document.addEventListener('DOMContentLoaded', type);
     </script>
 </body>
-</html>14:51 27/01/2026
+</html>
